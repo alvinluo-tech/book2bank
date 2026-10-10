@@ -1,0 +1,14 @@
+import { NextResponse } from "next/server";
+import { listFavorites, toggleFavorite } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  return NextResponse.json({ rows: listFavorites() });
+}
+
+export async function POST(req: Request) {
+  const body = (await req.json()) as { questionId?: string };
+  if (!body.questionId) return NextResponse.json({ error: "questionId is required" }, { status: 400 });
+  return NextResponse.json({ favorite: toggleFavorite(body.questionId) });
+}
